@@ -2,7 +2,8 @@
 
 Source: Yfantidou et al. (2022), Zenodo record 7229547 (version 4, latest at the
 time of writing), licence CC-BY-4.0. Only the CSV exports and the scored surveys
-are extracted; the MongoDB BSON dumps are left inside the zip because the CSV
+are extracted, plus the small SEMA3 BSON dump (prompt-level schedule/expiry
+times are only there). The 9.7 GB Fitbit BSON dump is left inside the zip because the CSV
 exports already contain the day-level Fitbit + SEMA3 data this project needs.
 
 Usage::
@@ -30,7 +31,11 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 
 # Members of the zip that this project uses (prefix match).
-WANTED_PREFIXES = ("csv_rais_anonymized/", "scored_surveys/")
+WANTED_PREFIXES = (
+    "csv_rais_anonymized/",
+    "scored_surveys/",
+    "mongo_rais_anonymized/sema.bson",  # 11 MB: needed for prompt-level ESM compliance
+)
 
 
 def _record_metadata() -> dict:

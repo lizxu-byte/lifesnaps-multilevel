@@ -155,9 +155,21 @@ def fit_mixedlm(
                 random[f"cov[{cov.index[j]},{a}]"] = float(cov.iloc[i, j])
         random["var[residual]"] = float(res.scale)
     slope_var = [v for k, v in random.items() if k.startswith("var[") and "Group" not in k and k != "var[residual]"]
-    degenerate = bool(re_formula) and (not converged or (slope_var and min(slope_var) < 1e-8))
+    corr_max = 0.0
+    if res is not None and res.cov_re.shape[0] > 1:
+        sd = np.sqrt(np.clip(np.diag(res.cov_re), 1e-12, None))
+        corr = res.cov_re.to_numpy() / np.outer(sd, sd)
+        corr_max = float(np.max(np.abs(corr[np.triu_indices_from(corr, 1)])))
+    degenerate = bool(re_formula) and (
+        not converged or (slope_var and min(slope_var) < 1e-8) or corr_max > 0.98
+    )
     if degenerate and fallback_to_intercept:
-        why = "did not converge" if not converged else "slope variance at boundary (~0)"
+        if not converged:
+            why = "did not converge"
+        elif corr_max > 0.98:
+            why = f"singular random-effects covariance (|corr| = {corr_max:.2f})"
+        else:
+            why = "slope variance at boundary (~0)"
         r0 = fit_mixedlm(df, formula, group, None, name, reml, False)
         r0.notes = [f"random slope {re_formula} dropped: {why}; refit with random intercept only"] + r0.notes
         return r0
@@ -177,6 +189,24 @@ def fit_mixedlm(
         notes=notes,
         model=res,
     )
+
+
+def random_slope_lrt(df: pd.DataFrame, formula: str, slope: str, group: str = "id") -> dict[str, float]:
+    """REML likelihood-ratio test of a random slope (variance + covariance with
+    the intercept) against a random-intercept-only model, on the same rows.
+
+    The null puts the variance on the boundary, so the p value uses the 50:50
+    mixture of chi2(1) and chi2(2) (Stram & Lee, 1994; Snijders & Bosker, 2012).
+    Fixed effects are identical in both models, so REML likelihoods are comparable.
+    """
+
+    d = _drop_missing(df, formula, [group, slope])
+    r1, _ = _best_fit(smf.mixedlm(formula, d, groups=d[group], re_formula=f"~ {slope}"), reml=True)
+    r0, _ = _best_fit(smf.mixedlm(formula, d, groups=d[group]), reml=True)
+    lr = max(0.0, 2 * (r1.llf - r0.llf))
+    p = 0.5 * stats.chi2.sf(lr, 1) + 0.5 * stats.chi2.sf(lr, 2)
+    return {"slope": slope, "lr_stat": lr, "p_mixture": p, "slope_var": float(r1.cov_re.loc[slope, slope]),
+            "slope_sd": float(np.sqrt(max(r1.cov_re.loc[slope, slope], 0))), "n_obs": int(r1.nobs)}
 
 
 def icc(df: pd.DataFrame, outcome: str, group: str = "id") -> dict[str, float]:
@@ -249,16 +279,26 @@ def fit_gee(
     if cov == "ar":
         cs = sm.cov_struct.Autoregressive(grid=False)
         model = smf.gee(formula, group, d, time=d[time].to_numpy(dtype=float), family=fam, cov_struct=cs)
+    elif cov == "independence":
+        model = smf.gee(formula, group, d, family=fam, cov_struct=sm.cov_struct.Independence())
     else:
         model = smf.gee(formula, group, d, family=fam, cov_struct=sm.cov_struct.Exchangeable())
+    notes: list[str] = []
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         res = model.fit(maxiter=200)
+        if not np.all(np.isfinite(res.params)):
+            # e.g. clusters with (almost) all-zero binary outcomes make the
+            # exchangeable/AR update diverge; independence working correlation
+            # with cluster-robust SEs is still valid (less efficient).
+            model = smf.gee(formula, group, d, family=fam, cov_struct=sm.cov_struct.Independence())
+            res = model.fit(maxiter=200)
+            notes.append(f"{cov} working correlation diverged; refit with independence working correlation")
     terms = list(res.params.index)
     fixed = _fixed_table(res.params, res.bse, res.pvalues, res.conf_int(), terms)
     dep = res.model.cov_struct.dep_params
     random = {"working_corr": float(np.atleast_1d(dep)[0]) if dep is not None else np.nan}
-    return MLResult(name or formula, formula, fixed, random, int(res.nobs), int(d[group].nunique()), True, [], res)
+    return MLResult(name or formula, formula, fixed, random, int(res.nobs), int(d[group].nunique()), True, notes, res)
 
 
 def fit_bayes_logit(df: pd.DataFrame, formula: str, group: str = "id", name: str = "") -> MLResult:

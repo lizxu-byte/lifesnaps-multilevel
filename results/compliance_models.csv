@@ -12,7 +12,7 @@ A: wear time,random-intercept logit (VB),"C(slot, Treatment('morning'))[T.evenin
 A: wear time,random-intercept logit (VB),wear_h_lag1_wp4,0.1874,0.01469,0.1587,0.2162,2.71e-37,1.206,1.172,1.241,11348,63
 A: wear time,random-intercept logit (VB),wear_h_lag1_bp4,0.7057,0.0161,0.6742,0.7373,0,2.025,1.962,2.09,11348,63
 A: wear time,random-intercept logit (VB),weekend,-0.1991,0.04912,-0.2954,-0.1028,5.067e-05,0.8195,0.7443,0.9023,11348,63
-A: wear time,random-intercept logit (VB),study_week,-0.1843,0.005033,-0.1942,-0.1745,1.037e-293,0.8317,0.8235,0.8399,11348,63
+A: wear time,random-intercept logit (VB),study_week,-0.1843,0.005033,-0.1942,-0.1745,1.036e-293,0.8317,0.8235,0.8399,11348,63
 "B: + steps, sleep (valid days)",GEE (population-averaged),Intercept,0.6945,0.2435,0.2172,1.172,0.004347,2.003,1.243,3.228,6629,56
 "B: + steps, sleep (valid days)",GEE (population-averaged),"C(slot, Treatment('morning'))[T.afternoon]",-0.2724,0.06432,-0.3985,-0.1463,2.284e-05,0.7615,0.6713,0.8639,6629,56
 "B: + steps, sleep (valid days)",GEE (population-averaged),"C(slot, Treatment('morning'))[T.evening]",-0.5778,0.08481,-0.7441,-0.4116,9.555e-12,0.5611,0.4752,0.6626,6629,56
@@ -24,14 +24,14 @@ A: wear time,random-intercept logit (VB),study_week,-0.1843,0.005033,-0.1942,-0.
 "B: + steps, sleep (valid days)",GEE (population-averaged),steps_k_lag1_bp,0.00199,0.05886,-0.1134,0.1173,0.973,1.002,0.8928,1.125,6629,56
 "B: + steps, sleep (valid days)",GEE (population-averaged),sleep_h_wp,0.04425,0.02008,0.004887,0.08361,0.02757,1.045,1.005,1.087,6629,56
 "B: + steps, sleep (valid days)",GEE (population-averaged),sleep_h_bp,-0.4053,0.244,-0.8835,0.07285,0.09664,0.6668,0.4133,1.076,6629,56
-"B: + steps, sleep (valid days)",random-intercept logit (VB),Intercept,1.083,0.03309,1.018,1.147,9.19e-235,2.952,2.767,3.15,6629,56
+"B: + steps, sleep (valid days)",random-intercept logit (VB),Intercept,1.083,0.03309,1.018,1.147,9.183e-235,2.952,2.767,3.15,6629,56
 "B: + steps, sleep (valid days)",random-intercept logit (VB),"C(slot, Treatment('morning'))[T.afternoon]",-0.4743,0.05795,-0.5879,-0.3607,2.746e-16,0.6223,0.5555,0.6972,6629,56
 "B: + steps, sleep (valid days)",random-intercept logit (VB),"C(slot, Treatment('morning'))[T.evening]",-0.9868,0.04896,-1.083,-0.8908,2.363e-90,0.3728,0.3387,0.4103,6629,56
 "B: + steps, sleep (valid days)",random-intercept logit (VB),wear_h_lag1_wp4,-0.01545,0.02354,-0.0616,0.03069,0.5116,0.9847,0.9403,1.031,6629,56
 "B: + steps, sleep (valid days)",random-intercept logit (VB),wear_h_lag1_bp4,0.5114,0.02208,0.4681,0.5547,1.092e-118,1.668,1.597,1.741,6629,56
 "B: + steps, sleep (valid days)",random-intercept logit (VB),weekend,-0.2674,0.06044,-0.3859,-0.149,9.647e-06,0.7653,0.6799,0.8616,6629,56
-"B: + steps, sleep (valid days)",random-intercept logit (VB),study_week,-0.1655,0.006473,-0.1782,-0.1528,3.481e-144,0.8475,0.8368,0.8583,6629,56
+"B: + steps, sleep (valid days)",random-intercept logit (VB),study_week,-0.1655,0.006473,-0.1782,-0.1528,3.48e-144,0.8475,0.8368,0.8583,6629,56
 "B: + steps, sleep (valid days)",random-intercept logit (VB),steps_k_lag1_wp,-0.001849,0.007631,-0.01681,0.01311,0.8085,0.9982,0.9833,1.013,6629,56
-"B: + steps, sleep (valid days)",random-intercept logit (VB),steps_k_lag1_bp,0.0437,0.009733,0.02463,0.06278,7.113e-06,1.045,1.025,1.065,6629,56
+"B: + steps, sleep (valid days)",random-intercept logit (VB),steps_k_lag1_bp,0.0437,0.009733,0.02463,0.06278,7.114e-06,1.045,1.025,1.065,6629,56
 "B: + steps, sleep (valid days)",random-intercept logit (VB),sleep_h_wp,0.06365,0.02701,0.0107,0.1166,0.01846,1.066,1.011,1.124,6629,56
-"B: + steps, sleep (valid days)",random-intercept logit (VB),sleep_h_bp,-0.2336,0.04363,-0.3192,-0.1481,8.521e-08,0.7916,0.7268,0.8623,6629,56
+"B: + steps, sleep (valid days)",random-intercept logit (VB),sleep_h_bp,-0.2336,0.04363,-0.3192,-0.1481,8.519e-08,0.7916,0.7268,0.8623,6629,56

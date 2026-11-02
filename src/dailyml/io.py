@@ -35,8 +35,10 @@ Alignment rules (person-day table, one row per ``id`` x local calendar ``date``)
   ``SCHEDULED_TS`` (delivery time). Answered = ``COMPLETED_TS`` not null.
   Response contents are attributed to the scheduled date as well (median
   answer latency is ~0.5 h and prompts expire after <= 4 h, so a prompt
-  delivered at 20:00 can be answered up to 24:00 at the latest). Prompts
-  scheduled before 04:00 (n = 59, test/odd schedules) are dropped.
+  delivered at 20:00 can be answered up to 24:00 at the latest).
+  Eight answers with labels outside the app's seven mood options (e.g.
+  'JOY', 'FEAR') count as answered but have a missing mood. Prompts
+  scheduled before 04:00 (n = 52 of 11,526, odd night-time schedules) are dropped.
 * **Activity.** Fitbit daily steps/RHR are for the local calendar day. In the
   models "previous day" activity (``*_lag1``) is used so that predictors
   precede the ESM reports.

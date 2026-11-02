@@ -243,7 +243,7 @@
     "n_persons": 63,
     "converged": true,
     "random": {
-      "sd[person intercept]": 2.041047199535198
+      "sd[person intercept]": 2.0410471887555968
     },
     "notes": [
       "variational Bayes approximation; 'p' is a normal approximation"
@@ -265,7 +265,7 @@
     "n_persons": 56,
     "converged": true,
     "random": {
-      "sd[person intercept]": 1.9848262812532174
+      "sd[person intercept]": 1.9848262505261616
     },
     "notes": [
       "variational Bayes approximation; 'p' is a normal approximation"

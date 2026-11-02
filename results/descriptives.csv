@@ -6,7 +6,7 @@ person-days in ESM periods,3986
 "valid wear days (>=10 h HR, >=100 steps)",2840
 valid main-sleep nights (3-15 h asleep),2308
 days with >=1 answered mood prompt,2283
-mood prompts scheduled (04:00-24:00),1.147e+04
+mood prompts scheduled (04:00-24:00),11474
 mood prompts answered,5034
 pooled ESM compliance,0.4387
 per-person compliance: mean,0.4354

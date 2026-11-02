@@ -150,7 +150,8 @@ def descriptives(prompts, d, parts, sessions):
         "participants with IPIP": int(parts["ipip_neuroticism"].notna().sum()),
         "participants with >=1 S-STAI": int(parts["stai_mean"].notna().sum()),
     }
-    desc = pd.DataFrame({"quantity": list(rows), "value": list(rows.values())})
+    fmt = [str(int(v)) if float(v).is_integer() else f"{v:.4f}" for v in rows.values()]
+    desc = pd.DataFrame({"quantity": list(rows), "value": fmt})
     SUMMARY["descriptives"] = rows
     hist = pd.cut(pp["compliance"], np.linspace(0, 1, 11), include_lowest=True).value_counts().sort_index()
     save(pd.DataFrame({"compliance_bin": hist.index.astype(str), "n_persons": hist.values}), "compliance_distribution.csv")
@@ -356,7 +357,7 @@ def compliance_models(prompts, d):
             out.append(t)
     save(pd.concat(out), "compliance_models.csv")
     SUMMARY["compliance_by_week"] = (
-        curve[curve["n_persons"] >= 10].assign(week=curve["study_day"] // 7)
+        curve[curve["study_day"] < 63].assign(week=curve["study_day"] // 7)
         .groupby("week")["mean"].mean().round(3).to_dict()
     )
 
@@ -459,8 +460,7 @@ def multiple_imputation(d, y, m=20, seed=11):
         X[f"{c}_pmean"] = sub.groupby("id")[c].transform("mean")
     X = X.fillna({f"{c}_pmean": X[f"{c}_pmean"].mean() for c in raw})
     X = X.reset_index(drop=True)
-    np.random.seed(seed)
-    imp = MICEData(X, k_pmm=10)
+    imp = MICEData(X, k_pmm=10, rng=np.random.default_rng(seed))
     fits = []
     for _ in range(m):
         imp.update_all(5)
